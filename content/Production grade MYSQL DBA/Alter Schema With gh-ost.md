@@ -4,11 +4,13 @@ longform:
   title: Alter Schema With gh-ost
 title: Alter Schema With gh-ost
 ---
+
 # Download Binary
 
 ```
 wget https://github.com/github/gh-ost/releases/download/v1.1.0/gh -ost_1.1.0_amd64.deb
 ```
+
 # Install
 
 ```
@@ -20,12 +22,13 @@ sudo dpkg -i gh-ost_1.1.0_amd64.deb
 ```
 SHOW VARIABLES LIKE '%binlog_row_image%';
 ```
+
 # Command
 
 Run the ghost in background
 
 ```
-  
+
 nohup gh-ost --host=myhost.com --user=root --password='demopassword' --database=django360 --table=users --alter="ADD COLUMN enc_uid_test VARCHAR(225)" --discard-foreign-keys --skip-foreign-key-checks --postpone-cut-over-flag-file=./ghost-postpone.flag --chunk-size=1000 --allow-on-master --execute gh-ost.log 2>&1 &
 
 ```
@@ -62,6 +65,7 @@ echo 'max-lag-millis=3000' | nc -U /tmp/gh-ost.scalenut_prod.analysis_competitor
 ```
 
 - If replicas are lagging, this prevents `gh-ost` from auto-throttling.
+
 #### **Check Current Lag Settings**
 
 ```
@@ -95,6 +99,7 @@ touch /path/to/ghost-postpone.flag  # File must match `--postpone-cut-over-flag-
 ```
 
 - `gh-ost` will wait **indefinitely** until the file is removed.
+
 #### **Allow Cut-Over to Proceed**
 
 ```
@@ -108,6 +113,7 @@ echo 'critical-load=Threads_running:50' | nc -U /tmp/gh-ost.sock
 ```
 
 - If `Threads_running > 50`, `gh-ost` auto-throttles.
+
 ## **7. Check Current Configuration**
 
 ```
@@ -133,58 +139,75 @@ DROP TABLE IF EXISTS `_analysis_competitor_gho`;
 gh-ost --host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com --user=root --password='mysecret_password' --database=django360 --table=users --alter="ADD COLUMN enc_uid VARCHAR(225), ADD INDEX idx_enc_uid (enc_uid)" --exact-rowcount --concurrent-rowcount --assume-rbr --discard-foreign-keys --skip-foreign-key-checks --assume-master-host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com --postpone-cut-over-flag-file=./ghost-postpone.flag --serve-socket-file=./ghost_session.sock --chunk-size=4000 --allow-on-master
 
 ```
+
 ### Basic Connection Flags:
-1. `--host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com`  
+
+1. `--host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com`
+
    - Specifies the MySQL master host to connect to.
 
-2. `--user=root`  
+2. `--user=root`
+
    - MySQL username for authentication.
 
-3. `--password='mysecret_password'`  
+3. `--password='mysecret_password'`
+
    - MySQL password for authentication (note: better to use a config file or environment variable for security).
 
-4. `--database=django360`  
+4. `--database=django360`
+
    - The database (schema) containing the table to alter.
 
-5. `--table=users`  
+5. `--table=users`
    - The table to alter.
 
 ### Alter Statement:
-6. `--alter="ADD COLUMN enc_uid VARCHAR(225), ADD INDEX idx_enc_uid (enc_uid)"`  
+
+6. `--alter="ADD COLUMN enc_uid VARCHAR(225), ADD INDEX idx_enc_uid (enc_uid)"`
    - The ALTER TABLE statement to execute. Here it's adding a new column `enc_uid` and an index on it.
 
 ### Row Count Flags:
-7. `--exact-rowcount`  
+
+7. `--exact-rowcount`
+
    - Get exact row count (rather than estimate) for ETA calculations.
 
-8. `--concurrent-rowcount`  
+8. `--concurrent-rowcount`
    - Count rows concurrently while copying data to minimize impact.
 
 ### Replication Behavior:
-9. `--assume-rbr`  
+
+9. `--assume-rbr`
+
    - Assume the MySQL server uses ROW-based replication (safer for RDS).
 
-10. `--assume-master-host=django-master-green...`  
+10. `--assume-master-host=django-master-green...`
     - Explicitly tell gh-ost the master's hostname (useful when replicas have different hostnames).
 
 ### Foreign Key Handling:
-11. `--discard-foreign-keys`  
+
+11. `--discard-foreign-keys`
+
     - Drop any foreign keys from the original table (avoids checks during migration).
 
-12. `--skip-foreign-key-checks`  
+12. `--skip-foreign-key-checks`
     - Skip verifying foreign key constraints during migration.
 
 ### Cut-Over Control:
-13. `--postpone-cut-over-flag-file=./ghost-postpone.flag`  
+
+13. `--postpone-cut-over-flag-file=./ghost-postpone.flag`
+
     - Pause before final table swap while this file exists (allows manual control).
 
-14. `--serve-socket-file=./ghost_session.sock`  
+14. `--serve-socket-file=./ghost_session.sock`
     - Create a Unix socket file for interaction (e.g., to trigger cut-over later).
 
 ### Performance Tuning:
-15. `--chunk-size=4000`  
+
+15. `--chunk-size=4000`
     - Number of rows to copy in each iteration (default is 1000).
 
 ### Safety Flag:
-16. `--allow-on-master`  
+
+16. `--allow-on-master`
     - Explicitly permit running directly on a master (gh-ost usually prefers replicas).
