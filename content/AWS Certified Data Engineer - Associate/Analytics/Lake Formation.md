@@ -35,3 +35,4 @@ AWS Lake Formation is a service provided by Amazon Web Services (AWS) designed t
 - **Data Governance and Compliance**: Manage access control, auditing, and compliance of sensitive data.
 
 AWS Lake Formation aims to make it easier to set up and manage a data lake with security and governance features built in, reducing the complexity and time typically required for these tasks.
+

@@ -126,3 +126,65 @@ echo 'panic' | nc -U /tmp/gh-ost.scalenut_prod.analysis_competitor.sock
 ```
 DROP TABLE IF EXISTS `_analysis_competitor_gho`;
 ```
+
+# Use gh-ost to execute alteration on Slave
+
+```
+gh-ost --host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com --user=root --password='mysecret_password' --database=django360 --table=users --alter="ADD COLUMN enc_uid VARCHAR(225), ADD INDEX idx_enc_uid (enc_uid)" --exact-rowcount --concurrent-rowcount --assume-rbr --discard-foreign-keys --skip-foreign-key-checks --assume-master-host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com --postpone-cut-over-flag-file=./ghost-postpone.flag --serve-socket-file=./ghost_session.sock --chunk-size=4000 --allow-on-master
+
+```
+### Basic Connection Flags:
+1. `--host=django-master-green-pgfcmj.c5dn03jzrwgy.ap-south-1.rds.amazonaws.com`  
+   - Specifies the MySQL master host to connect to.
+
+2. `--user=root`  
+   - MySQL username for authentication.
+
+3. `--password='mysecret_password'`  
+   - MySQL password for authentication (note: better to use a config file or environment variable for security).
+
+4. `--database=django360`  
+   - The database (schema) containing the table to alter.
+
+5. `--table=users`  
+   - The table to alter.
+
+### Alter Statement:
+6. `--alter="ADD COLUMN enc_uid VARCHAR(225), ADD INDEX idx_enc_uid (enc_uid)"`  
+   - The ALTER TABLE statement to execute. Here it's adding a new column `enc_uid` and an index on it.
+
+### Row Count Flags:
+7. `--exact-rowcount`  
+   - Get exact row count (rather than estimate) for ETA calculations.
+
+8. `--concurrent-rowcount`  
+   - Count rows concurrently while copying data to minimize impact.
+
+### Replication Behavior:
+9. `--assume-rbr`  
+   - Assume the MySQL server uses ROW-based replication (safer for RDS).
+
+10. `--assume-master-host=django-master-green...`  
+    - Explicitly tell gh-ost the master's hostname (useful when replicas have different hostnames).
+
+### Foreign Key Handling:
+11. `--discard-foreign-keys`  
+    - Drop any foreign keys from the original table (avoids checks during migration).
+
+12. `--skip-foreign-key-checks`  
+    - Skip verifying foreign key constraints during migration.
+
+### Cut-Over Control:
+13. `--postpone-cut-over-flag-file=./ghost-postpone.flag`  
+    - Pause before final table swap while this file exists (allows manual control).
+
+14. `--serve-socket-file=./ghost_session.sock`  
+    - Create a Unix socket file for interaction (e.g., to trigger cut-over later).
+
+### Performance Tuning:
+15. `--chunk-size=4000`  
+    - Number of rows to copy in each iteration (default is 1000).
+
+### Safety Flag:
+16. `--allow-on-master`  
+    - Explicitly permit running directly on a master (gh-ost usually prefers replicas).

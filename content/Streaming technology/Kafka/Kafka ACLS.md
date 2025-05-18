@@ -37,7 +37,7 @@ kafka-acls \
 
 ### 2. Verify ACLs
 
-Check the applied ACLs for `test_topic`:
+Check the applied ACLs for `demmo_topic`:
 
 ```
 kafka-acls \
