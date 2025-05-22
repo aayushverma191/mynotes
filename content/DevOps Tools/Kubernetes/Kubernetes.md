@@ -10,3 +10,5 @@ longform:
 ## [[Architechture]]
 
 ## [[Operator]]
+
+## [[Setup EKS]]

@@ -41,6 +41,9 @@ title: Kafka
 ## [[Kafka ACLS]]
 ## [[Kafka Interview Questions]]
 
+## [[Kafka On EKS]]
+
+
 
 
 
