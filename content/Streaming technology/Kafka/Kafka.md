@@ -43,6 +43,13 @@ title: Kafka
 
 ## [[Kafka On EKS]]
 
+## [[Kafka Administrator Tasks & Solutions]]
+
+## [[Kafka Cluster Version Upgrade Using MM2]]
+
+
+
+
 
 
 
