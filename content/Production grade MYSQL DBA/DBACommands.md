@@ -438,5 +438,4 @@ SHOW VARIABLES LIKE 'read_only';
 
 SET GLOBAL read_only = ON;
 
-
 ```
