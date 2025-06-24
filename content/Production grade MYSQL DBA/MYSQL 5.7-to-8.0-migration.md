@@ -228,8 +228,6 @@ SET GLOBAL binlog_expire_logs_seconds = 86400; -- Keep logs for 1 day (adjust as
 - Re-enable binary logging (if disabled).
 - Reset `max_binlog_size` if smaller files are preferred.
 
-Here's a well-structured `README.md` version of your content:
-
 ---
 
 # 🛠️ MySQL Migration & Optimization Guide
