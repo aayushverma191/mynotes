@@ -1,3 +1,3 @@
-The document is hosted at - [https://dnisha.github.io/mynotes/](https://dnisha.github.io/mynotes/)
+The document is hosted at - ([https://aayushverma191.github.io/mynotes/](https://aayushverma191.github.io/mynotes/))
 
 
