@@ -28,6 +28,8 @@ This is the front end of the Kubernetes control plane. It exposes the Kubernetes
 
 A distributed key-value store used to store all cluster data, including configurations and state. It is a highly available and consistent storage layer.
 
+If your Kubernetes cluster uses etcd as its backing store, make sure you have a [back up](https://v1-32.docs.kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster) plan for the data.
+
 #### **Controller Manager (kube-controller-manager):** 
 
 This component runs controllers, which are responsible for ensuring that the cluster's state matches the desired state. Controllers handle tasks like replication, scaling, and other routine operations.
